@@ -3,7 +3,7 @@ import inspect
 
 class Tensor:
   def __init__(self, data):
-    self.data = np.array(data)
+    self.data = np.array(data, dtype=np.float32)
     self.grad = None
     self.ctx = None
 
@@ -29,8 +29,10 @@ class Tensor:
       t.backward()
 
 def register(name, cls):
-  setattr(Tensor, f'__{name}__', lambda *args: cls.apply(cls, *args))
+  if name in ['add', 'mul', 'matmul', 'pow']:
+    setattr(Tensor, f'__{name}__', lambda *args: cls.apply(cls, *args))
+  else: 
+    setattr(Tensor, f'{name}', lambda *args: cls.apply(cls, *args))
 
 import synapse.operations
-for name, cls in inspect.getmembers(synapse.operations, inspect.isclass):
-  register(name.lower(), cls)
+[register(name.lower(), cls) for name, cls in inspect.getmembers(synapse.operations, inspect.isclass)]
