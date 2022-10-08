@@ -29,7 +29,7 @@ class Tensor:
       t.backward()
 
 def register(name, cls):
-  setattr(Tensor, f'__{name}__', lambda *args: cls.apply(cls, args))
+  setattr(Tensor, f'__{name}__', lambda *args: cls.apply(cls, *args))
 
 import synapse.operations
 for name, cls in inspect.getmembers(synapse.operations, inspect.isclass):

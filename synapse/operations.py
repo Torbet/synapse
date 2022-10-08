@@ -30,5 +30,9 @@ class MatMul(Function):
   @staticmethod
   def backward(ctx, grad):
     a,b = ctx.saved
+    """
+    ga = grad @ b.T
+    gb = a.T @ grad
+    """
     return b*grad, a*grad
 
